@@ -1,0 +1,62 @@
+import json
+import pprint
+from datetime import datetime
+import requests
+import os
+
+
+def get_key(filename="keys.txt"):
+    # first line should be the api key
+    return open(filename, "r").read()
+
+
+def get_data(day):
+    key = get_key()
+
+    # coordinates for BCA
+    latitude = 40.9014937
+    longitude = -74.034276
+
+    r = requests.get("https://api.darksky.net/forecast/%s/%f,%f,%s" % (key, latitude, longitude, str(day).replace(" ", "T")))
+    r_obj = json.loads(r.text)
+    return r_obj
+
+
+def dealWithTheData(response):
+    output = {}
+    stuffs = ["cloudCover", "humidity", "precipIntensity", "precipProbability", "precipType", "visibility", "windSpeed"]
+    trimmedResponse = response["daily"]["data"][0]
+    print(trimmedResponse)
+
+    for stuff in stuffs:
+        if stuff in trimmedResponse:
+            output[stuff] = trimmedResponse[stuff]
+        else:
+            output[stuff] = "null"
+
+    output["sunsetTime"] = "T".join(str(datetime.fromtimestamp(response['daily']['data'][0]["sunsetTime"])).split(" "))
+    return output
+
+
+def addToFile(data, day):
+    f = open("data.json", "a")
+    f.seek(f.tell() - 1, os.SEEK_SET)
+    f.truncate()
+
+    # this assumes that data.json already contains something
+    # if it is empty, add "{}" to it, run the script and then remove the leading comma
+    toWrite = ", \""
+    toWrite += "T".join(str(day).split(" "))
+    toWrite += "\": "
+    toWrite += str(data)
+    toWrite += "}"
+
+    f.write(toWrite.replace("'", "\""))
+    f.close()
+
+
+if __name__ == "__main__":
+    day = datetime(2018, 12, 3)
+    response = get_data(day)
+    trimmedData = dealWithTheData(response)
+    addToFile(trimmedData, day)
