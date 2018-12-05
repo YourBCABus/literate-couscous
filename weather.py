@@ -39,11 +39,11 @@ def dealWithTheData(response):
 
 
 def addToFile(data, day):
-    f = open("data.json", "a")
+    f = open("weather.json", "a")
     f.seek(f.tell() - 1, os.SEEK_SET)
     f.truncate()
 
-    # this assumes that data.json already contains something
+    # this assumes that weather.json already contains something
     # if it is empty, add "{}" to it, run the script and then remove the leading comma
     toWrite = ", \""
     toWrite += "T".join(str(day).split(" "))
@@ -55,8 +55,11 @@ def addToFile(data, day):
     f.close()
 
 
+def main(date):
+    response = get_data(date)
+    data = dealWithTheData(response)
+    addToFile(data, date)
+
+
 if __name__ == "__main__":
-    day = datetime(2018, 12, 3)
-    response = get_data(day)
-    trimmedData = dealWithTheData(response)
-    addToFile(trimmedData, day)
+    main(datetime(2007, 12, 4))
