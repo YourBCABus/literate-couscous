@@ -26,7 +26,6 @@ def dealWithTheData(response):
     output = {}
     stuffs = ["cloudCover", "humidity", "precipIntensity", "precipProbability", "precipType", "visibility", "windSpeed"]
     trimmedResponse = response["daily"]["data"][0]
-    print(trimmedResponse)
 
     for stuff in stuffs:
         if stuff in trimmedResponse:
