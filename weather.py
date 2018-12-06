@@ -33,7 +33,7 @@ def dealWithTheData(response):
         else:
             output[stuff] = "null"
 
-    output["sunsetTime"] = "T".join(str(datetime.fromtimestamp(response['daily']['data'][0]["sunsetTime"])).split(" "))
+    output["sunsetTime"] = str(datetime.fromtimestamp(response['daily']['data'][0]["sunsetTime"])).replace(" ", "T")
     return output
 
 
@@ -44,11 +44,7 @@ def addToFile(data, day):
 
     # this assumes that weather.json already contains something
     # if it is empty, add "{}" to it, run the script and then remove the leading comma
-    toWrite = ", \""
-    toWrite += "T".join(str(day).split(" "))
-    toWrite += "\": "
-    toWrite += str(data)
-    toWrite += "}"
+    toWrite = ", \"" + str(day)[0:10] + "\": " + str(data) + "}"
 
     f.write(toWrite.replace("'", "\""))
     f.close()

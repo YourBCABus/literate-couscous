@@ -3,4 +3,6 @@ out/
 **.iml
 **/keys.txt
 **/*.json
+**/*.csv
 **/*.pyc
+venv/
