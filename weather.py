@@ -29,11 +29,14 @@ def dealWithTheData(response):
 
     for stuff in stuffs:
         if stuff in trimmedResponse:
-            output[stuff] = trimmedResponse[stuff]
+            if stuff == "precipType":
+                output[stuff] = {"": 0, "rain": 1, "snow": 2, "sleet": 3}[trimmedResponse[stuff]]
+            else:
+                output[stuff] = trimmedResponse[stuff]
         else:
-            output[stuff] = "null"
+            output[stuff] = 0
 
-    output["sunsetTime"] = str(datetime.fromtimestamp(response['daily']['data'][0]["sunsetTime"])).replace(" ", "T")
+    output["sunsetTime"] = str(datetime.fromtimestamp(response['daily']['data'][0]["sunsetTime"]))[11:].replace(":", "")
     return output
 
 

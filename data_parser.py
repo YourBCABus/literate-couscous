@@ -19,7 +19,7 @@ for i in range(busdf_org.shape[0]):
     colData = str(weatherdf[date].values)[1:-1].split(" ")
     for j in range(len(colData)):
         busdf.at[i, j] = colData[j]
-    busdf.at[i, "time"] = busdf_org.at[i, "time"]
+    busdf.at[i, "time"] = busdf_org.at[i, "time"][11:-5].replace(":", "")
 
 # the last column, "time", is the final arrival time
 # bus locations have not been added
