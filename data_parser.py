@@ -19,7 +19,14 @@ for i in range(busdf_org.shape[0]):
     colData = str(weatherdf[date].values)[1:-1].split(" ")
     for j in range(len(colData)):
         busdf.at[i, j] = colData[j]
-    busdf.at[i, "time"] = busdf_org.at[i, "time"][11:-5].replace(":", "")
+
+    time = busdf_org.at[i, "time"][11:-5].replace(":", "")
+    print(time)
+    if int(time) < 180000:
+        busdf.at[i, "halfday"] = 1
+    else:
+        busdf.at[i, "halfday"] = 0
+    busdf.at[i, "time"] = time
 
 # the last column, "time", is the final arrival time
 # bus locations have not been added
