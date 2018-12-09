@@ -29,7 +29,7 @@ for i in range(busdf_org.shape[0]):
     date = busdf_org.at[i, "time"][0:10]
     colData = str(weatherdf[date].values)[1:-1].split(" ")
     for j in range(len(colData)):
-        busdf.at[i, j] = colData[j]
+        busdf.at[i, j] = float(colData[j])
 
     time = busdf_org.at[i, "time"][11:-5].replace(":", "")
     if int(time) < 190000:
