@@ -9,6 +9,7 @@ weatherdf = pd.read_json("weather.json")
 # make new array with bus_id column
 busdf = pd.DataFrame()
 busdf["bus_id"] = busdf_org["bus_id"]
+busdf["bus_id"] = busdf.bus_id.apply(lambda x: int(x, 16))
 
 # get list of dates in weather data
 dates = [str(i)[0:10] for i in list(weatherdf)]
@@ -21,7 +22,6 @@ for i in range(busdf_org.shape[0]):
         busdf.at[i, j] = colData[j]
 
     time = busdf_org.at[i, "time"][11:-5].replace(":", "")
-    print(time)
     if int(time) < 180000:
         busdf.at[i, "halfday"] = 1
     else:
