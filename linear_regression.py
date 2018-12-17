@@ -60,7 +60,7 @@ class PrintDot(keras.callbacks.Callback):
         print(".", end="")
 
 
-EPOCHS = 500
+EPOCHS = 25000
 
 # Store training stats
 history = model.fit(X_train, Y_train, epochs=EPOCHS,
