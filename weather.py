@@ -5,7 +5,7 @@ import requests
 import os
 
 
-def get_key(filename="keys.txt"):
+def get_key(filename="darkskyapikey.txt"):
     # first line should be the api key
     return open(filename, "r").read()
 

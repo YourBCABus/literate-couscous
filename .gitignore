@@ -1,7 +1,7 @@
 .idea/
 out/
 **.iml
-**/keys.txt
+**/*.txt
 **/*.json
 **/*.csv
 **/*.pyc
