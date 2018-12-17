@@ -2,12 +2,16 @@ import numpy as np
 import pandas as pd
 from datetime import datetime
 import pytz
+import json
 
 localtime = pytz.timezone("America/New_York")
 
 # get data from json files
 busdf_org = pd.read_json("busdata.json")
 weatherdf = pd.read_json("weather.json")
+with open("maps.json", "r") as mapsjson:
+    mapsdata = json.load(mapsjson)
+distances = pd.DataFrame({"distance": mapsdata})
 
 # make new array with bus_id column
 busdf = pd.DataFrame()
@@ -26,6 +30,8 @@ for i in range(busdf_org.shape[0]):
     colData = str(weatherdf[date].values)[1:-1].split(" ")
     for j in range(len(colData)):
         busdf.at[i, j] = float(colData[j])
+
+    busdf.at[i, "dist"] = distances.at[bus_id, "distance"]
 
     time = busdf_org.at[i, "time"][11:-5].replace(":", "")
     if int(time) < 190000:
