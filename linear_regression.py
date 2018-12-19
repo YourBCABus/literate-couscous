@@ -9,6 +9,8 @@ import sklearn
 from sklearn.model_selection import train_test_split
 from sklearn import preprocessing
 
+import os
+
 # Read in data, shuffle
 df = pd.read_csv("data.csv")
 df.sample(frac=1)
@@ -16,9 +18,10 @@ df.sample(frac=1)
 # Split data into features and labels
 Y = df["time"].values.reshape(df.shape[0], 1)
 df = df.drop("time", 1)
+df = df.drop("bus_id", 1)
 dataset = df.values
 dataset = dataset.astype(float)
-X = dataset[:, 0:dataset.shape[1]]
+X = dataset[:, 1:dataset.shape[1]]
 
 # Split into training and test groups
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
@@ -46,7 +49,6 @@ def build_model():
                   metrics=["mae"])
     return model
 
-
 # Uses the model
 model = build_model()
 early_stop = keras.callbacks.EarlyStopping(monitor="val_loss", patience=20)
@@ -59,14 +61,20 @@ class PrintDot(keras.callbacks.Callback):
             print("")
         print(".", end="")
 
+EPOCHS = 2500
 
-EPOCHS = 25000
+# Saves the things
+checkpoint_path = "./checkpoint.ckpt"
+checkpoint_dir = os.path.dirname(checkpoint_path)
+
+cp_callbacks = tf.keras.callbacks.ModelCheckpoint(checkpoint_path,
+                                   save_weights_only=True,
+                                   verbose=1, period=EPOCHS)
 
 # Store training stats
 history = model.fit(X_train, Y_train, epochs=EPOCHS,
                     validation_split=0.2, verbose=0,
-                    callbacks=[PrintDot()])
-
+                    callbacks=[PrintDot(), cp_callbacks])
 
 # Graph training and cross validation losses
 import matplotlib.pyplot as plt
@@ -82,7 +90,6 @@ plt.legend()
 plt.xlim(plt.xlim())
 plt.ylim(plt.ylim())
 plt.show()
-
 
 # Runs test points through algorithm & predicts outcome
 test_predictions = model.predict(X_test).flatten()
