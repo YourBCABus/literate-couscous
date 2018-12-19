@@ -3,6 +3,7 @@ import pandas as pd
 from datetime import datetime
 import pytz
 import json
+import math
 
 localtime = pytz.timezone("America/New_York")
 
@@ -42,8 +43,8 @@ for i in range(busdf_org.shape[0]):
 
     # magic
     date = localtime.localize(datetime.strptime(busdf_org.at[i, "time"], "%Y-%m-%dT%H:%M:%S.%fZ"))
-    time = date.hour * 60 * 60 + date.minute * 60 + date.second - date.dst().total_seconds()
-    print(time)
+    time = date.hour * 60 * 60 + date.minute * 60 + date.second + date.dst().total_seconds()
+    # print(math.floor(time / (60 * 60)) - 5) THAT INCIDENT
 
     for j in range(5):
         key = "previous_%d" % (j + 1)
