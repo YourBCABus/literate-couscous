@@ -61,6 +61,7 @@ for i in range(busdf_org.shape[0]):
 
     bustimedict[bus_id].append(time)
 
+    busdf.at[i, "weekday"] = date.weekday()
     busdf.at[i, "time"] = time
 
 # last column is predicted feature (time, GMT; format: hhmmss)
