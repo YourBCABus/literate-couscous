@@ -53,6 +53,7 @@ def build_model():
 model = build_model()
 early_stop = keras.callbacks.EarlyStopping(monitor="val_loss", patience=20)
 
+p
 
 # Display training progress by printing a single dot for each completed epoch
 class PrintDot(keras.callbacks.Callback):
@@ -75,6 +76,8 @@ cp_callbacks = tf.keras.callbacks.ModelCheckpoint(checkpoint_path,
 history = model.fit(X_train, Y_train, epochs=EPOCHS,
                     validation_split=0.2, verbose=0,
                     callbacks=[PrintDot(), cp_callbacks])
+
+model.save("model.h5")
 
 # Graph training and cross validation losses
 import matplotlib.pyplot as plt
