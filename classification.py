@@ -26,7 +26,7 @@ dataset = dataset.astype(float)
 X = dataset[:, 1:dataset.shape[1]]
 
 bins = [76200, 76500, 76800, 77100, 77400]
-Y = np.digitize(Y, bins, True)
+Y = keras.utils.to_categorical(np.digitize(Y, bins, True))
 
 # Split into training and test groups
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
@@ -41,10 +41,10 @@ X_test = (X_test - mean) / std
 # Defines the model
 def build_model():
     model = keras.Sequential([
-        keras.layers.Dense(64, activation=tf.nn.relu,
+        keras.layers.Dense(8, activation=tf.nn.relu,
                            input_shape=(X_train.shape[1],)),
-        keras.layers.Dense(64, activation=tf.nn.relu),
-        keras.layers.Dense(1)
+        keras.layers.Dense(7, activation=tf.nn.relu),
+        keras.layers.Dense(6, activation=tf.nn.softmax)
     ])
 
     optimizer = tf.train.RMSPropOptimizer(0.001)
@@ -99,20 +99,20 @@ plt.ylim(plt.ylim())
 plt.show()
 
 # Runs test points through algorithm & predicts outcome
-test_predictions = model.predict(X_test).flatten()
+# test_predictions = model.predict(X_test)
 
-plt.scatter(Y_test, test_predictions)
-plt.xlabel('True Values')
-plt.ylabel('Predictions')
-plt.axis('equal')
-plt.xlim(plt.xlim())
-plt.ylim(plt.ylim())
-_ = plt.plot([-100, 100], [-100, 100])
-plt.show()
+# plt.scatter(Y_test, test_predictions)
+# plt.xlabel('True Values')
+# plt.ylabel('Predictions')
+# plt.axis('equal')
+# plt.xlim(plt.xlim())
+# plt.ylim(plt.ylim())
+# _ = plt.plot([-100, 100], [-100, 100])
+# plt.show()
 
 
-error = test_predictions - Y_test
-plt.hist(error, bins=50)
-plt.xlabel("Prediction Error")
-_ = plt.ylabel("Count")
-plt.show()
+# error = test_predictions - Y_test
+# plt.hist(error, bins=50)
+# plt.xlabel("Prediction Error")
+# _ = plt.ylabel("Count")
+# plt.show()
