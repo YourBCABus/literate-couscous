@@ -52,7 +52,7 @@ for i in range(busdf_org.shape[0]):
             array = bustimedict[bus_id]
             busdf.at[i, key] = array[len(array) - j - 1]
         except IndexError:
-            busdf.at[i, key] = 0
+            busdf.a;t[i, key] = 0
         except KeyError:
             busdf.at[i, key] = 0
 

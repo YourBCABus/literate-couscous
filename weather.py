@@ -26,6 +26,7 @@ def dealWithTheData(response):
     output = {}
     stuffs = ["cloudCover", "humidity", "precipIntensity", "precipProbability", "precipType", "visibility", "windSpeed"]
     trimmedResponse = response["daily"]["data"][0]
+    print(trimmedResponse["summary"])
 
     for stuff in stuffs:
         if stuff in trimmedResponse:
@@ -55,6 +56,7 @@ def addToFile(data, day):
 
 def main(date):
     response = get_data(date)
+    print(date)
     data = dealWithTheData(response)
     addToFile(data, date)
 
