@@ -47,11 +47,12 @@ def build_model():
         keras.layers.Dense(6, activation=tf.nn.softmax)
     ])
 
-    optimizer = tf.train.RMSPropOptimizer(0.001)
+    optimizer = tf.train.AdamOptimizer()
 
-    model.compile(loss="mse",
+    model.compile(loss="categorical_crossentropy",
                   optimizer=optimizer,
                   metrics=["mae"])
+
     return model
 
 # Uses the model
