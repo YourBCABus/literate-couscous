@@ -10,6 +10,7 @@ from sklearn.model_selection import train_test_split
 from sklearn import preprocessing
 
 import os
+import matplotlib.pyplot as plt
 
 # Read in data, shuffle
 df = pd.read_csv("data.csv")
@@ -37,7 +38,6 @@ std = X_train.std(axis=0)
 X_train = (X_train - mean) / std
 X_test = (X_test - mean) / std
 
-
 # Defines the model
 def build_model():
     model = keras.Sequential([
@@ -59,7 +59,7 @@ def build_model():
 model = build_model()
 early_stop = keras.callbacks.EarlyStopping(monitor="val_loss", patience=20)
 
-
+"""
 # Display training progress by printing a single dot for each completed epoch
 class PrintDot(keras.callbacks.Callback):
     def on_epoch_end(self, epoch, logs):
@@ -85,8 +85,6 @@ history = model.fit(X_train, Y_train, epochs=EPOCHS,
 model.save("model.h5")
 
 # Graph training and cross validation losses
-import matplotlib.pyplot as plt
-
 plt.figure()
 plt.xlabel('Epoch')
 plt.ylabel('Mean Abs Error')
@@ -98,22 +96,26 @@ plt.legend()
 plt.xlim(plt.xlim())
 plt.ylim(plt.ylim())
 plt.show()
+"""
+
+model.load_weights("model.h5")
 
 # Runs test points through algorithm & predicts outcome
-# test_predictions = model.predict(X_test)
+test_predictions = np.argmax(model.predict(X_test), axis = 1)
+Y_argmaxed = np.argmax(Y_test, axis = 1)
 
-# plt.scatter(Y_test, test_predictions)
-# plt.xlabel('True Values')
-# plt.ylabel('Predictions')
-# plt.axis('equal')
-# plt.xlim(plt.xlim())
-# plt.ylim(plt.ylim())
-# _ = plt.plot([-100, 100], [-100, 100])
-# plt.show()
+plt.scatter(Y_argmaxed, test_predictions)
+plt.xlabel('True Values')
+plt.ylabel('Predictions')
+plt.axis('equal')
+plt.xlim(plt.xlim())
+plt.ylim(plt.ylim())
+_ = plt.plot([-100, 100], [-100, 100])
+plt.show()
 
 
-# error = test_predictions - Y_test
-# plt.hist(error, bins=50)
-# plt.xlabel("Prediction Error")
-# _ = plt.ylabel("Count")
-# plt.show()
+error = test_predictions - Y_argmaxed
+plt.hist(error, bins=50)
+plt.xlabel("Prediction Error")
+_ = plt.ylabel("Count")
+plt.show()
