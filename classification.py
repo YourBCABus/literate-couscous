@@ -37,6 +37,8 @@ mean = X_train.mean(axis=0)
 std = X_train.std(axis=0)
 X_train = (X_train - mean) / std
 X_test = (X_test - mean) / std
+print(mean)
+print(std)
 
 # Defines the model
 def build_model():
