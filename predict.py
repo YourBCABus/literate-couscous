@@ -3,12 +3,10 @@ from __future__ import print_function
 import requests
 import datetime
 import json
-import pandas as pd
 import tensorflow as tf
 from tensorflow import keras
 import numpy as np
 import pytz
-import random
 
 localtime = pytz.timezone("America/New_York")
 date = datetime.date.today()
@@ -59,7 +57,7 @@ def build_model():
     model = keras.Sequential([
         keras.layers.Dense(8, activation=tf.nn.relu,
                            input_shape=(8,)),
-        keras.layers.Dense(7, activation=tf.nn.relu),
+        keras.layers.Dense(5, activation=tf.nn.relu),
         keras.layers.Dense(6, activation=tf.nn.softmax)
     ])
 
@@ -111,9 +109,11 @@ for bus in buses:
     x = (np.array([[weather_data["cloudCover"], mapsdata[bus["_id"]] or 0, 0, *previous]]) - mean) / std
     result = bins[int(np.argmax(model.predict(x)))]
 
-    r = requests.patch("https://db.yourbcabus.com/schools/5bca51e785aa2627e14db459/buses/%s" % bus["_id"], data = json.dumps({
+    payload = {
         "boarding": result,
         "locations": [],
-        "invalidates": invalidate.isoformat() + "Z"
-    }), headers = {"Authorization": "Basic %s" % ybb_key})
+        "invalidate_time": invalidate.isoformat() + "Z"
+    }
+    r = requests.patch("https://db.yourbcabus.com/schools/5bca51e785aa2627e14db459/buses/%s" % bus["_id"], data = json.dumps(payload), headers = {"Authorization": "Basic %s" % ybb_key, "Content-Type": "application/json"})
     print("%s: %d" % (bus["name"], result))
+    break

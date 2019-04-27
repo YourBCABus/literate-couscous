@@ -9,7 +9,9 @@ localtime = pytz.timezone("America/New_York")
 
 # get data from json files
 busdf_org = pd.read_json("busdata.json")
-weatherdf = pd.read_json("weather.json")
+with open("weather.json", "r") as weatherjson:
+    weatherdf = json.load(weatherjson)
+# print(weatherdf["2018-11-12"])
 with open("maps.json", "r") as mapsjson:
     mapsdata = json.load(mapsjson)
 distances = pd.DataFrame({"distance": mapsdata})
@@ -28,9 +30,13 @@ for i in range(busdf_org.shape[0]):
     bus_id = busdf_org.at[i, "bus_id"]
 
     date = busdf_org.at[i, "time"][0:10]
-    colData = str(weatherdf[date].values)[1:-1].split(" ")
-    for j in range(len(colData)):
-        busdf.at[i, j] = float(colData[j])
+  #  print(date)
+  #  print(weatherdf[date])
+    colData = weatherdf[date]
+    j = 0
+    for key in colData:
+        busdf.at[i, j] = float(colData[key])
+        j = j + 1
 
     busdf.at[i, "dist"] = distances.at[bus_id, "distance"]
 

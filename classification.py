@@ -45,7 +45,7 @@ def build_model():
     model = keras.Sequential([
         keras.layers.Dense(8, activation=tf.nn.relu,
                            input_shape=(X_train.shape[1],)),
-        keras.layers.Dense(7, activation=tf.nn.relu),
+        keras.layers.Dense(5, activation=tf.nn.relu),
         keras.layers.Dense(6, activation=tf.nn.softmax)
     ])
 
@@ -61,7 +61,6 @@ def build_model():
 model = build_model()
 early_stop = keras.callbacks.EarlyStopping(monitor="val_loss", patience=20)
 
-"""
 # Display training progress by printing a single dot for each completed epoch
 class PrintDot(keras.callbacks.Callback):
     def on_epoch_end(self, epoch, logs):
@@ -98,9 +97,8 @@ plt.legend()
 plt.xlim(plt.xlim())
 plt.ylim(plt.ylim())
 plt.show()
-"""
 
-model.load_weights("model.h5")
+# model.load_weights("model.h5")
 
 # Runs test points through algorithm & predicts outcome
 test_predictions = np.argmax(model.predict(X_test), axis = 1)
